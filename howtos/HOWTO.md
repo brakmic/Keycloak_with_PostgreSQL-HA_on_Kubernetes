@@ -213,13 +213,13 @@ spec:
 
 * Check the status of the pods:
 
-![all_pods](../../images/all_pods.png)
+![all_pods](../img/all_pods.png)
 
 Now open your browser on https://localhost
 
 You should see this page.
 
-![keycloak_web_u](../../images/keycloak_web_ui.png)
+![keycloak_web_u](../img/keycloak_web_ui.png)
 
 ---
 
