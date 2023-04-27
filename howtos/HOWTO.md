@@ -211,10 +211,6 @@ spec:
 
 * Apply this configuration with `kubectl apply -f keycloak-ingress.yaml`
 
-* Check the status of the pods:
-
-![all_pods](../img/all_pods.png)
-
 Now open your browser on https://localhost
 
 You should see this page.
