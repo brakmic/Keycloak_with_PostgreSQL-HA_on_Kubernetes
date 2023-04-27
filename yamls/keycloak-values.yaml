@@ -1,0 +1,23 @@
+global:
+  storageClass: "standard"
+
+auth:
+  adminUser: "admin"
+  existingSecret: "keycloak-admin-password"
+  passwordSecretKey: "password"
+production: true
+proxy: edge
+externalDatabase:
+  host: "postgresql-ha-pgpool.hbr-keycloak.svc.cluster.local"
+  port: 5432
+  user: "postgres"
+  password: null
+  existingSecret: "postgresql-secret"
+  existingSecretPasswordKey: "password"
+  database: "postgres"
+persistence:
+  enabled: true
+  size: "8Gi"
+
+postgresql:
+  enabled: false

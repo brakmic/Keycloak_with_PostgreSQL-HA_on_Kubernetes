@@ -1,0 +1,39 @@
+postgresql:
+  username: "postgres"
+  password: null
+  existingSecret: "postgresql-secret"
+  database: "postgres"
+  resources:
+    limits:
+      cpu: "1"
+      memory: "1Gi"
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+
+repmgr:
+  password: null
+  existingSecret: "repmgr-secret"
+
+pgpool:
+  adminUsername: "admin"
+  adminPassword: null
+  existingSecret: "pgpool-secret"
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "256Mi"
+    requests:
+      cpu: "250m"
+      memory: "128Mi"
+
+metrics:
+  enabled: true
+  resources:
+    limits:
+      cpu: "300m"
+      memory: "128Mi"
+    requests:
+      cpu: "100m"
+      memory: "64Mi"
+

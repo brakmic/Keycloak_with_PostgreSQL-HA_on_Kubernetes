@@ -1,0 +1,21 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: selfsigned-tls
+  namespace: hbr-keycloak
+spec:
+  secretName: selfsigned-tls
+  issuerRef:
+    name: selfsigned
+    kind: ClusterIssuer
+  dnsNames:
+    - localhost
+  subject:
+    organizations:
+      - OpenSource Development
+    countries:
+      - DE
+    localities:
+      - Troisdorf
+    provinces:
+      - Northrhine-Westphalia
