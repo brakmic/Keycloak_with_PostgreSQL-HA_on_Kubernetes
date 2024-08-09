@@ -32,19 +32,16 @@ kubectl create secret generic keycloak-admin-password \
 * PostgreSQL, PgPool, and RepMgr Passwords
 
 ```bash
-POSTGRES_PASSWORD=$(openssl rand -hex 16 | base64 | tr -d '\n')
+POSTGRES_ADMIN_PASSWORD=$(openssl rand -hex 16 | base64 | tr -d '\n')
+POSTGRES_USER_PASSWORD=$(openssl rand -hex 16 | base64 | tr -d '\n')
 REPMGR_PASSWORD=$(openssl rand -hex 16 | base64 | tr -d '\n')
 PGPOOL_ADMIN_PASSWORD=$(openssl rand -hex 16 | base64 | tr -d '\n')
 
 kubectl create secret generic postgresql-secret \
-  --from-literal=password=$POSTGRES_PASSWORD \
+  --from-literal=password=$POSTGRES_USER_PASSWORD \
+  --from-literal=postgres-password=$POSTGRES_ADMIN_PASSWORD \
   --from-literal=repmgr-password=$REPMGR_PASSWORD \
-  -n hbr-keycloak
-
-kubectl create secret generic pgpool-secret \
-  --from-literal=admin-password=$PGPOOL_ADMIN_PASSWORD \
-  -n hbr-keycloak
-
+  -n hbr-keycloak  >/dev/null 2>&1
 ```
 ---
 
@@ -56,33 +53,44 @@ Create YAML named `postgresql-values.yaml` and reference it in the helm installa
 global:
   storageClass: "standard"
 
-auth:
-  adminUser: "admin"
-  existingSecret: "keycloak-admin-password"
-  passwordSecretKey: "password"
-production: true
-proxy: edge
-
-externalDatabase:
-  host: "postgresql-ha-pgpool.hbr-keycloak.svc.cluster.local"
-  port: 5432
-  user: "postgres"
+postgresql:
+  username: "keycloak"
   password: null
   existingSecret: "postgresql-secret"
-  existingSecretPasswordKey: "password"
-  database: "postgres"
-persistence:
+  database: "keycloak"
+  resources:
+    limits:
+      cpu: "2"
+      memory: "2Gi"
+    requests:
+      cpu: "1"
+      memory: "1Gi"
+
+repmgr:
+  password: null
+  existingSecret: "repmgr-secret"
+
+pgpool:
+  adminUsername: "admin"
+  adminPassword: null
+  existingSecret: "pgpool-secret"
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "256Mi"
+    requests:
+      cpu: "250m"
+      memory: "128Mi"
+
+metrics:
   enabled: true
-  size: "8Gi"
-
-postgresql:
-  enabled: false
-```
-
-```bash
-helm install postgresql-ha bitnami/postgresql-ha \
-  --namespace hbr-keycloak \
-  -f postgresql-values.yaml
+  resources:
+    limits:
+      cpu: "300m"
+      memory: "128Mi"
+    requests:
+      cpu: "100m"
+      memory: "64Mi"
 ```
 
 **Hint**: your storage class might be different, so change the parameter value accordingly.
@@ -130,47 +138,27 @@ Create YAML named `keycloak-values.yaml` and reference it in the helm installati
 
 Here we're referencing the secret we created previously to set the admin password.
 
-We're also using the `extraInitContainers` and `extraContainers` sections to run additional containers in the Keycloak pod. The `extraInitContainers` section runs a container that waits for the pgpool service to be available before starting Keycloak. The `extraContainers` section runs a container that modifies the `/etc/hosts` file to include the `pgpool` service host name.
-
 ```yaml
-postgresql:
-  username: "postgres"
+auth:
+  adminUser: "admin"
+  existingSecret: "keycloak-admin-password"
+  passwordSecretKey: "password"
+production: true
+proxy: edge
+externalDatabase:
+  host: "postgresql-ha-pgpool.hbr-keycloak.svc.cluster.local"
+  port: 5432
+  user: "keycloak"
   password: null
   existingSecret: "postgresql-secret"
-  database: "postgres"
-  resources:
-    limits:
-      cpu: "1"
-      memory: "1Gi"
-    requests:
-      cpu: "500m"
-      memory: "512Mi"
-
-repmgr:
-  password: null
-  existingSecret: "repmgr-secret"
-
-pgpool:
-  adminUsername: "admin"
-  adminPassword: null
-  existingSecret: "pgpool-secret"
-  resources:
-    limits:
-      cpu: "500m"
-      memory: "256Mi"
-    requests:
-      cpu: "250m"
-      memory: "128Mi"
-
-metrics:
+  existingSecretPasswordKey: "password"
+  database: "keycloak"
+persistence:
   enabled: true
-  resources:
-    limits:
-      cpu: "300m"
-      memory: "128Mi"
-    requests:
-      cpu: "100m"
-      memory: "64Mi"
+  size: "8Gi"
+
+postgresql:
+  enabled: false
 ```
 
 ```bash
