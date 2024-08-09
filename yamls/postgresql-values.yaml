@@ -1,3 +1,6 @@
+global:
+  storageClass: "standard"
+
 postgresql:
   username: "keycloak"
   password: null
