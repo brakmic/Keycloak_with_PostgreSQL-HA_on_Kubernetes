@@ -51,12 +51,14 @@ kubectl create secret generic keycloak-admin-password \
 
 echo -e "$GEN passwords and secrets for PostgreSQL, RepMgr, and PgPool admin\n"
 
-POSTGRES_PASSWORD=$(openssl rand -hex 16 | base64 | tr -d '\n')
+POSTGRES_ADMIN_PASSWORD=$(openssl rand -hex 16 | base64 | tr -d '\n')
+POSTGRES_USER_PASSWORD=$(openssl rand -hex 16 | base64 | tr -d '\n')
 REPMGR_PASSWORD=$(openssl rand -hex 16 | base64 | tr -d '\n')
 PGPOOL_ADMIN_PASSWORD=$(openssl rand -hex 16 | base64 | tr -d '\n')
 
 kubectl create secret generic postgresql-secret \
-  --from-literal=password=$POSTGRES_PASSWORD \
+  --from-literal=password=$POSTGRES_USER_PASSWORD \
+  --from-literal=postgres-password=$POSTGRES_ADMIN_PASSWORD \
   --from-literal=repmgr-password=$REPMGR_PASSWORD \
   -n hbr-keycloak  >/dev/null 2>&1
 
