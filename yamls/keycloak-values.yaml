@@ -10,14 +10,15 @@ proxy: edge
 externalDatabase:
   host: "postgresql-ha-pgpool.hbr-keycloak.svc.cluster.local"
   port: 5432
-  user: "postgres"
+  user: "keycloak"
   password: null
   existingSecret: "postgresql-secret"
   existingSecretPasswordKey: "password"
-  database: "postgres"
+  database: "keycloak"
 persistence:
   enabled: true
   size: "8Gi"
 
 postgresql:
   enabled: false
+
