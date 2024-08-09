@@ -1,6 +1,3 @@
-global:
-  storageClass: "standard"
-
 auth:
   adminUser: "admin"
   existingSecret: "keycloak-admin-password"
@@ -21,4 +18,3 @@ persistence:
 
 postgresql:
   enabled: false
-
