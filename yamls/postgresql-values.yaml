@@ -1,15 +1,15 @@
 postgresql:
-  username: "postgres"
+  username: "keycloak"
   password: null
   existingSecret: "postgresql-secret"
-  database: "postgres"
+  database: "keycloak"
   resources:
     limits:
+      cpu: "2"
+      memory: "2Gi"
+    requests:
       cpu: "1"
       memory: "1Gi"
-    requests:
-      cpu: "500m"
-      memory: "512Mi"
 
 repmgr:
   password: null
@@ -36,4 +36,3 @@ metrics:
     requests:
       cpu: "100m"
       memory: "64Mi"
-
