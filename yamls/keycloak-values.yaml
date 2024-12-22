@@ -2,8 +2,10 @@ auth:
   adminUser: "admin"
   existingSecret: "keycloak-admin-password"
   passwordSecretKey: "password"
+
 production: true
 proxy: edge
+
 externalDatabase:
   host: "postgresql-ha-pgpool.hbr-keycloak.svc.cluster.local"
   port: 5432
@@ -12,6 +14,7 @@ externalDatabase:
   existingSecret: "postgresql-secret"
   existingSecretPasswordKey: "password"
   database: "keycloak"
+
 persistence:
   enabled: true
   size: "8Gi"

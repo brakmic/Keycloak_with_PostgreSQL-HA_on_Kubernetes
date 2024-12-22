@@ -1,4 +1,6 @@
 global:
+   # "standard" by default or "hostpath" when using docker-desktop;
+   # use 'kubectl get storageclass' to check for available storage classes
   storageClass: "standard"
 
 postgresql:
@@ -16,7 +18,7 @@ postgresql:
 
 repmgr:
   password: null
-  existingSecret: "repmgr-secret"
+  existingSecret: "postgresql-secret"
 
 pgpool:
   adminUsername: "admin"

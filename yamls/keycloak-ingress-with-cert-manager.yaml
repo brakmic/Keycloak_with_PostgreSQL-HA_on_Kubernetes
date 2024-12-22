@@ -11,7 +11,7 @@ metadata:
 spec:
   tls:
   - hosts:
-    - localhost
+      - localhost
     secretName: selfsigned-tls
   rules:
   - host: localhost
