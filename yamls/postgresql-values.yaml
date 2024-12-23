@@ -1,5 +1,4 @@
 global:
-   # "standard" by default or "hostpath" when using docker-desktop;
    # use 'kubectl get storageclass' to check for available storage classes
   storageClass: "standard"
 
@@ -8,13 +7,14 @@ postgresql:
   password: null
   existingSecret: "postgresql-secret"
   database: "keycloak"
+  replicaCount: 2
   resources:
     limits:
-      cpu: "2"
-      memory: "2Gi"
+      cpu: "500m"
+      memory: "256Mi"
     requests:
-      cpu: "1"
-      memory: "1Gi"
+      cpu: "250m"
+      memory: "128Mi"
 
 repmgr:
   password: null
@@ -29,15 +29,29 @@ pgpool:
       cpu: "500m"
       memory: "256Mi"
     requests:
-      cpu: "250m"
+      cpu: "256m"
       memory: "128Mi"
 
 metrics:
-  enabled: true
+  enabled: false
   resources:
     limits:
-      cpu: "300m"
-      memory: "128Mi"
-    requests:
-      cpu: "100m"
+      cpu: "500m"
       memory: "64Mi"
+    requests:
+      cpu: "250m"
+      memory: "32Mi"
+
+witness:
+  create: false
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "256Mi"
+    requests:
+      cpu: "250m"
+      memory: "128Mi"
+
+persistence:
+  enabled: true
+  size: "8Gi"

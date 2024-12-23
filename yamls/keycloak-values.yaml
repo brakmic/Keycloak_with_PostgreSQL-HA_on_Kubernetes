@@ -5,6 +5,15 @@ auth:
 
 production: true
 proxy: edge
+replicaCount: 1
+
+resources:
+    limits:
+      cpu: 2
+      memory: "1Gi"
+    requests:
+      cpu: 1
+      memory: "512Mi"
 
 externalDatabase:
   host: "postgresql-ha-pgpool.hbr-keycloak.svc.cluster.local"
@@ -14,10 +23,6 @@ externalDatabase:
   existingSecret: "postgresql-secret"
   existingSecretPasswordKey: "password"
   database: "keycloak"
-
-persistence:
-  enabled: true
-  size: "8Gi"
 
 postgresql:
   enabled: false
