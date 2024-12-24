@@ -1,0 +1,21 @@
+{{- if .Values.certificateIssuer.enabled }}
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: {{ .Values.certificateIssuer.name }}
+spec:
+  {{- if eq .Values.certificateIssuer.type "SelfSigned" }}
+  selfSigned: {}
+  {{- else if eq .Values.certificateIssuer.type "LetEncrypt" }}
+  acme:
+    email: {{ .Values.certificateIssuer.letsEncrypt.email }}
+    server: {{ .Values.certificateIssuer.letsEncrypt.server }}
+    privateKeySecretRef:
+      name: {{ .Values.certificateIssuer.letsEncrypt.privateKeySecretRef.name }}
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+  {{- end }}
+{{- end }}

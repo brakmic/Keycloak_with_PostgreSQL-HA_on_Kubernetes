@@ -1,0 +1,139 @@
+# Namespace configurations
+namespace:
+  keycloak: "hbr-keycloak"
+
+# Keycloak Configuration
+keycloak:
+  enabled: true
+  auth:
+    adminUser: "admin"
+    existingSecret: "keycloak-admin-password"
+    passwordSecretKey: "password"
+
+  production: true
+
+  proxy: "edge"
+
+  replicaCount: 1
+
+  resources:
+    limits:
+      cpu: "1"
+      memory: "1Gi"
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+
+  externalDatabase:
+    host: "keycloak-postgresqlha-pgpool.hbr-keycloak.svc.cluster.local"
+    port: 5432
+    user: "keycloak"
+    passwordSecretKey: "password"
+    existingSecret: "postgresql-secret"
+    existingSecretPasswordKey: "password"
+    database: "keycloak"
+
+  postgresql:
+    enabled: false  # Disable embedded PostgreSQL
+
+# PostgreSQL HA Configuration
+postgresqlha:
+  enabled: true
+  global:
+    storageClass: "standard"  # Adjust based on your cluster
+
+  postgresql:
+    username: "keycloak"
+    passwordSecretKey: "password"  # Provided via SealedSecret
+    existingSecret: "postgresql-secret"
+    database: "keycloak"
+    replicaCount: 2
+
+    resources:
+      limits:
+        cpu: "500m"
+        memory: "256Mi"
+      requests:
+        cpu: "250m"
+        memory: "128Mi"
+
+  repmgr:
+    passwordSecretKey: "repmgr-password"  # Provided via SealedSecret
+    existingSecret: "postgresql-secret"
+
+  pgpool:
+    adminUsername: "admin"
+    adminPasswordSecretKey: "admin-password"  # Provided via SealedSecret
+    existingSecret: "pgpool-secret"
+
+    resources:
+      limits:
+        cpu: "500m"
+        memory: "256Mi"
+      requests:
+        cpu: "256m"
+        memory: "128Mi"
+
+  metrics:
+    enabled: false
+    resources:
+      limits:
+        cpu: "500m"
+        memory: "64Mi"
+      requests:
+        cpu: "250m"
+        memory: "32Mi"
+
+  witness:
+    create: false
+    resources:
+      limits:
+        cpu: "500m"
+        memory: "256Mi"
+      requests:
+        cpu: "250m"
+        memory: "128Mi"
+
+  persistence:
+    enabled: true
+    size: "8Gi"
+
+# Ingress Configuration
+ingress:
+  enabled: true
+  name: "keycloak-ingress"
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    cert-manager.io/cluster-issuer: "selfsigned"
+  hosts:
+    - host: "localhost"
+      paths:
+        - path: "/"
+          pathType: "Prefix"
+          backend:
+            serviceName: "keycloak"
+            servicePort: "http"
+  tls:
+    - hosts:
+        - "localhost"
+      secretName: "selfsigned-tls"
+
+# Certificate Configuration
+certificate:
+  enabled: true
+  issuerRef:
+    name: "selfsigned"            # Name of the external ClusterIssuer
+    kind: "ClusterIssuer"         # Kind of the Issuer (ClusterIssuer or Issuer)
+  dnsNames:
+    - "localhost"
+  subject:
+    organizations:
+      - "OpenSource Development"
+    countries:
+      - "DE"
+    localities:
+      - "Bonn"
+    provinces:
+      - "Northrhine-Westphalia"

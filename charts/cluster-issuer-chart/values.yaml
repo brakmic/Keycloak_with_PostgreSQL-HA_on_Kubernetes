@@ -1,0 +1,24 @@
+ # Certificate Issuer Configuration
+certificateIssuer:
+  enabled: true
+  type: "SelfSigned"  # Options: SelfSigned, LetEncrypt
+  name: "selfsigned"
+
+  # SelfSigned Issuer Configuration
+  selfSigned:
+    organizations:
+      - "ACME GmbH"
+    countries:
+      - "DE"
+    localities:
+      - "Bonn"
+    provinces:
+      - "Northrhine-Westplhalia"
+
+  # Let's Encrypt Issuer Configuration
+  letsEncrypt:
+    name: "letsencrypt"
+    email: "admin@example.com"
+    server: "https://acme-v02.api.letsencrypt.org/directory"
+    privateKeySecretRef:
+      name: "letsencrypt-account-key"

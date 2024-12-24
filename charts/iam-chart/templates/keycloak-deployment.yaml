@@ -1,0 +1,4 @@
+{{- if .Values.keycloak.enabled }}
+# Keycloak deployment is managed via Helm dependency.
+# Additional configurations can be handled here if necessary.
+{{- end }}

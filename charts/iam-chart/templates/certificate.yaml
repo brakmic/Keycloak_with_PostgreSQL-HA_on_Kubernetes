@@ -1,0 +1,34 @@
+{{- if and .Values.ingress.enabled .Values.certificate.enabled }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "{{ include "iam-chart.fullname" . }}-tls"
+  namespace: {{ include "iam-chart.namespace" . }}
+spec:
+  secretName: "{{ include "iam-chart.fullname" . }}-tls"
+  issuerRef:
+    name: {{ .Values.certificate.issuerRef.name }}
+    kind: {{ .Values.certificate.issuerRef.kind }}
+  dnsNames:
+    {{- range .Values.certificate.dnsNames }}
+    - {{ . }}
+    {{- end }}
+  subject:
+    organizations:
+      {{- range .Values.certificate.subject.organizations }}
+      - {{ . }}
+      {{- end }}
+    countries:
+      {{- range .Values.certificate.subject.countries }}
+      - {{ . }}
+      {{- end }}
+    localities:
+      {{- range .Values.certificate.subject.localities }}
+      - {{ . }}
+      {{- end }}
+    provinces:
+      {{- range .Values.certificate.subject.provinces }}
+      - {{ . }}
+      {{- end }}
+{{- end }}
