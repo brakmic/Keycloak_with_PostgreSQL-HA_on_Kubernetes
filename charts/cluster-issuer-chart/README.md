@@ -3,5 +3,5 @@
 #### Deployment
 
 ```shell
-helm install cluster-issuer . --namespace cluster-issuer --create-namespace
+helm upgrade --install cluster-issuer cluster-issuer-chart/ --namespace cluster-issuer --create-namespace
 ```
