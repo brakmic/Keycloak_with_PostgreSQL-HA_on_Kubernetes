@@ -25,3 +25,12 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/version: {{ .Chart.AppVersion }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
+
+{{/* full name of Bitnami Keycloak sub-chart → iam-chart Release.Name-keycloak Chart.Name */}}
+{{- define "keycloak.fullname" -}}
+  {{- include "common.names.dependency.fullname" (dict
+      "chartName"   "keycloak"
+      "chartValues" .Values.keycloak
+      "context"     .
+    ) | trunc 63 | trimSuffix "-" }}
+{{- end }}
