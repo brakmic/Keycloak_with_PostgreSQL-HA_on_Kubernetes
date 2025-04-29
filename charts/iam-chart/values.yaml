@@ -104,8 +104,8 @@ ingress:
   name: "keycloak-ingress"
   className: "nginx"
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginxSslRedirect: "true"
+    nginxBackendProtocol: "HTTP"
     cert-manager.io/cluster-issuer: "selfsigned"
   hosts:
     - host: "localhost"
