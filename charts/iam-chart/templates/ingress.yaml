@@ -23,7 +23,7 @@ spec:
             pathType: "Prefix"
             backend:
               service:
-                name: "keycloak"
+                name: {{ include "keycloak.fullname" . }}
                 port:
                   name: "http"
 {{- end }}
